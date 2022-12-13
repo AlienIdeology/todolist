@@ -23,33 +23,25 @@ server.use("/resources", express.static("resources"));
 
 server.get("/", (req, res) => {
     db.getTodoList(req.query).then(rows => {
-        // take care of date format
-        for (let item of rows) {
-            item.overdue = false;
-            if (!item.remindDate) continue;
-
-            // set overdue
-            if (item.remindDate.getTime() < Date.now()) {
-                item.overdue = true;
-            }
-            // change date to string as value of html input-date
-            item.remindDate = item.remindDate.toISOString().substring(0, 10);
-        }
-        let pug = makePugEnv();
-        pug.rows = rows;
-        res.render("todolist", pug);
+        res.render("todolist", makePugEnv());
     }, err => {
         console.log(err);
         res.render("todolist", makeErrorPugEnv(`Unable to retrieve the todolist. (Reason: ${err.code})`));
     })
 });
 
-server.get("/*", (req, res) => {
-    res.redirect("/");
+// api end points
+// get a list of items in json format
+server.get("/api/items", (req, res) => {
+    db.getTodoList(req.query).then(rows => {
+        res.json(rows);
+    }, err => {
+        res.status(404).end();
+    })
 });
 
 // sends status code 404 if request resulted in error
-server.post("/addTodoItem", (req, res) => {
+server.post("/api/items/add", (req, res) => {
     let item = req.body.item;
     if (!item) {
         res.status(400).end();
@@ -61,6 +53,11 @@ server.post("/addTodoItem", (req, res) => {
     }, err => {
         res.status(404).end();
     })
+});
+
+// redirect any other page to the main page
+server.get("/*", (req, res) => {
+    res.redirect("/");
 });
 
 const listener = server.listen(PORT, function(err) {

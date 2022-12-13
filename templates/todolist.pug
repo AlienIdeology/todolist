@@ -8,21 +8,20 @@ block center
     h1 Get 'em done!
 
     #todolist 
-        if rows
-            each item in rows
-                .todoitem
-                    label.checkcontainer
-                        input(type="checkbox" checked=(item.done==1))
-                        span.todocheck
-                    .textcontainer
-                        input.todotext(type="text" value=item.title)
-                    .datecontainer
-                        if item.overdue && item.done
-                            input.tododate.overdue.done(type="date" value=item.remindDate)
-                        else if item.overdue
-                            input.tododate.overdue(type="date" value=item.remindDate)
-                        else
-                            input.tododate(type="date" value=item.remindDate)
-                    // TODO: remove button
+        //-
+            .todoitem
+                label.checkcontainer
+                    input(type="checkbox" checked=(item.done==1))
+                    span.todocheck
+                .textcontainer
+                    input.todotext(type="text" value=item.title)
+                .datecontainer
+                    if item.overdue && item.done
+                        input.tododate.overdue.done(type="date" value=item.remindDate)
+                    else if item.overdue
+                        input.tododate.overdue(type="date" value=item.remindDate)
+                    else
+                        input.tododate(type="date" value=item.remindDate)
+            // TODO: remove button
         #addTodoitem
             div#plus
