@@ -1,0 +1,5 @@
+/* Bridg between lightColors.css and style.css
+Allow style.css to access color variables in lightColors.css */
+@import "./lightColors.css";
+@import "./frame.css";
+@import "./todolist.css";

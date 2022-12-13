@@ -1,0 +1,72 @@
+/* General styles about the website's frame */
+body {
+    margin: 0%;
+    background-color: var(--body-background-color);
+}
+
+div#nav {
+    background-color: var(--nav-color);
+    padding: 1em;
+    margin-bottom: 0;
+}
+
+div#nav * {
+    margin: 0;
+}
+
+div#nav h1 {
+    text-align: center;
+    font-size: 3em;
+    color: var(--font-color);
+}
+
+div#center {
+    width: 60vw;
+    height: 100vh;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em 1em 1.5em 1.5em;
+    border-bottom-left-radius: 2em;
+    border-bottom-right-radius: 2em;
+    background-color: var(--center-color)
+}
+
+#errorMsg {
+    position: fixed;
+    /* top: 0; */
+    left: 35vw;
+    background-color: rgb(255, 90, 90);
+    opacity: 0.9;
+    width: 30vw;
+    height: 4em;
+    padding: 1em;
+
+    /* Make the error message disappear in 5 seconds */
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes cssAnimation {
+    to {
+        width: 0;
+        height: 0;
+        padding: 0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width: 0;
+        height: 0;
+        padding: 0;
+        visibility:hidden;
+    }
+}

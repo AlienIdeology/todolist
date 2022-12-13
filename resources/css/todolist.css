@@ -1,0 +1,165 @@
+#todolist {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Todo item flex box */
+.todoitem {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: start;
+    align-items: flex-start;
+    gap: 1em;
+}
+
+.todoitem > * {
+    margin: 0.5em;
+    height: 2em;
+    flex-grow: 0;
+}
+
+.todoitem > .checkcontainer {
+    flex-grow: 1;
+}
+
+.todoitem > .textcontainer {
+    flex-grow: 14;
+}
+
+.todoitem > .datecontainer {
+    flex-grow: 5;
+}
+
+/* Checkbox (circle) */
+/* The container must be a label for the check to go through the custom checkbox to the browser checkbox */
+.checkcontainer {
+    user-select: none; /* user cannot select text */
+    position: relative;
+    z-index: 0;
+}
+
+/* Hide the browser's default checkmark */
+.checkcontainer input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+}
+
+/* Customize the custom checkbox */
+.checkcontainer .todocheck {
+    position: absolute; /* without this the todocheck doesnt show up! */
+    top: 15%;
+    left: 0;
+    height: 1.5em;
+    width: 1.5em;
+    cursor: pointer;
+    border-radius: 50%;
+    border-width: 1px;
+    border-color: var(--todo-check-color);
+    border-style: solid;
+}
+
+/* On mouse-hover when checkbox unchecked, add a background color */
+.checkcontainer:hover input:not(:checked) ~ .todocheck {
+    opacity: 0.5;
+    background-color: var(--todo-check-hover-color);
+}
+
+/* When the checkbox is checked: */
+.checkcontainer input:checked ~ .todocheck {
+    /* background-color: #2196F3; */
+    border-style: none; /* hide borders */
+}
+
+/* Hide check (circle) when not checked */
+.todocheck::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Display check (circle) when checked */
+.checkcontainer input:checked ~ .todocheck::after {
+    display: block;
+}
+
+/* Customize the check (circle)  */
+.checkcontainer .todocheck::after {
+    width: 100%;
+    height: 100%;
+    background: var(--todo-check-color);
+
+    border-radius: 50%;
+    border-width: 1px;
+    border-color: var(--todo-check-color);
+    border-style: solid;
+}
+
+/* Todo Text */
+.textcontainer .todotext {
+    background-color: inherit;
+    border-bottom-width: 1px;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    font-size: 1.5em;
+    width: 100%;
+    border-color: rgb(34, 34, 34, .7);
+}
+
+.textcontainer .todotext:focus {
+    border-radius: 5px;
+    border-width: 1.5px;
+    border-color: black;
+    outline: 0;  /* hide default browser outline; bad for accessibility? */
+    transition: border 100ms;
+}
+
+.datecontainer {
+    user-select: none;
+    width: 15%;
+}
+
+.datecontainer .tododate {
+    position: relative;
+    top: 5%;
+    width: 100%;
+    height: 90%;
+}
+
+/* Overdue but done */
+.datecontainer .tododate.overdue.done {
+    color: rgb(12, 200, 12);
+}
+
+/* Overdue but not done */
+.datecontainer .tododate.overdue {
+    color: red;
+}
+
+/* "Add Item" Row */
+#addTodoitem {
+    cursor: pointer;
+    width: 100%;
+    padding: 0;
+    text-align: center;
+}
+
+#addTodoitem:hover {
+    background-color: rgb(235, 234, 234);
+}
+
+#plus {
+    display:inline-block;
+    width: 2em;
+    height: 2em;
+    
+    background:
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0);
+    background-position:center;
+    background-size: 50% 2px,2px 50%; /*thickness = 2px, length = 50% (25px)*/
+    background-repeat:no-repeat;
+  }
