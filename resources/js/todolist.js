@@ -9,12 +9,17 @@ const endPoints = {
     }
 }
 
-let items = [];
-let newItems = [];
-let changedItemIds = [];
+const itemStatus = {
+    removed: -1,
+    unchanged: 0,
+    changed: 1,
+    created: 2
+};
+const items = []; // array of item wrappers {item: item, status: ...}
+let itemsAdded = 0;
 
-// create DOM element of a todo item
-function newTodoItem(item) {
+// create DOM element of a todo item based on a json item
+function newItem(item) {
     let todoitem = document.createElement("div");
     todoitem.classList.add("todoitem");
 
@@ -54,7 +59,6 @@ function newTodoItem(item) {
         if (item.remindDate) {
             // add .overdue if overdue
             let date = new Date(item.remindDate);
-            console.log(date);
             if (date.getTime() < Date.now()) {
                 dateinput.classList.add("overdue");
             }
@@ -76,28 +80,70 @@ function newTodoItem(item) {
 }
 
 // create the fields for a new todo item
-function createEmptyTodoItem() {
+function createEmptyItem() {
+    let emptyJsItem = {
+        done: false,
+        text: "",
+        remindDate: null
+    };
+
+    let domItem = newItem(emptyJsItem);  // -1 for new item?
+    regItemListener(domItem);
+
+    // update the items list
+    itemsAdded++;
+    domItem.id = -1 * itemsAdded;
+    emptyJsItem.id = -1 * itemsAdded;
+    items.push({
+        item: emptyJsItem,
+        status: itemStatus.created,
+    });
+    console.log("Item created: ");
+    console.log(items);
+
+    // add empty item to dom
     let todolist = document.getElementById("todolist");
-    const itemcount = todolist.children.length-1;
-    let newItem = newTodoItem({id:-1});  // -1 for new item
-    regItemListener(newItem);
-    todolist.insertBefore(newItem, todolist.children[itemcount]);
+    let itemcount = todolist.children.length-1;
+    todolist.insertBefore(domItem, todolist.children[itemcount]);
 }
 
-// add the changed input's item it to the list of changed ids
-function addChangedInput(event) {
-    console.log("Input changed: ");
-    console.log(event.currentTarget);
+// A changed item is either:
+// (1) a new item: parse the html, add to items list
+// (2) an old item with values updated: parse the html, modify item in list
+function addChangedItem(event) {
     const item = event.currentTarget;
-    if (item.id == -1)
-        newItems.push(item.id);
-    else
-        changedItemIds.push(item.id);
+
+    items.forEach(it => {
+        // only set status to "changed" if the item has existed (is not new)
+        if (it.item.id == item.id) {
+            if (it.status == itemStatus.unchanged) {
+                it.status = itemStatus.changed;
+            }
+            const id = it.item.id;  // temporarily store it
+            it.item = parseItem(item);  // replace the old item with the new one
+            it.item.id = id;
+            console.log("Input changed:");
+            console.log(items);
+        } 
+    });
+}
+
+function parseItem(domItem) {
+    let item = {};
+    let checkinput = domItem.getElementsByClassName("checkcontainer")[0].getElementsByTagName("input")[0];
+    if (checkinput.checked)
+        item.done = true;
+    let textinput = domItem.getElementsByClassName("todotext")[0];
+    item.text = textinput ? textinput.value : "";
+    let dateinput = domItem.getElementsByClassName("tododate")[0];
+    item.date = dateinput ? dateinput.value : null;
+    return item;
 }
 
 // register a listener to a todo item
 function regItemListener(item) {
-    item.addEventListener("change", addChangedInput);
+    item.addEventListener("change", addChangedItem);
+    // TODO: add remove item listener (blocks bubbling)
 }
 
 async function addItems() {
@@ -111,18 +157,24 @@ async function onLoad() {
     let plusItem = document.getElementById("addTodoitem");
     // load items
     let ep = endPoints.getTodoItems;
-    items = await fetch(ep.string, {method: ep.method})
+    let jsonitems = await fetch(ep.string, {method: ep.method})
         .then((res) => res.json());
 
     let todolist = document.getElementById("todolist");
     
-    for (let it of items) {
-        it = newTodoItem(it);
-        regItemListener(it);
-        todolist.insertBefore(it, plusItem);   // always insert before the last element (+ sign)
+    for (let it of jsonitems) {
+        console.log("item:");
+        console.log(it);
+        items.push({
+            item: it,
+            status: itemStatus.unchanged
+        });
+        let domIt = newItem(it);
+        regItemListener(domIt);
+        todolist.insertBefore(domIt, plusItem);   // always insert before the last element (+ sign)
     }
 
     // add event listeners
-    plusItem.addEventListener("click", createEmptyTodoItem);
+    plusItem.addEventListener("click", createEmptyItem);
 }
 window.addEventListener("load", onLoad);
