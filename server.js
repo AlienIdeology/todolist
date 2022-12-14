@@ -25,7 +25,7 @@ server.get("/api/items", (req, res) => {
 });
 
 // sends status code 404 if request resulted in error
-server.post("/api/items/add", (req, res) => {
+server.post("/api/items", (req, res) => {
     console.log(req.body);
     let item = req.body.item;
     if (!item) {
@@ -41,7 +41,7 @@ server.post("/api/items/add", (req, res) => {
     })
 });
 
-server.post("/api/items/update/:id", (req, res) => {
+server.put("/api/items/:id", (req, res) => {
     let item = req.body.item;
     let id = req.params.id;
     if (!item || !id) {

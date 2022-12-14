@@ -4,12 +4,12 @@ const endPoints = {
         method : "GET"
     },
     addItem : {
-        string : "/api/items/add",
+        string : "/api/items",
         method : "POST"
     },
     updateItem : {
-        string : "/api/items/update/",
-        method: "POST"
+        string : "/api/items/", // + :id routing parameter
+        method: "PUT"
     }
 }
 
@@ -35,7 +35,10 @@ function newDOMItem(item) {
         checkcontainer.classList.add("checkcontainer");
         let checkinput = document.createElement("input");
         checkinput.type = "checkbox";
-        if (item.done) checkinput.checked = item.done;
+        if (item.done) {
+            checkinput.checked = item.done;
+            todoitem.classList.add("done");  // add .done if done
+        }
         let replacecheck = document.createElement("span");
         replacecheck.classList.add("todocheck");
         checkcontainer.appendChild(checkinput);
@@ -66,10 +69,8 @@ function newDOMItem(item) {
             // add .overdue if overdue
             let date = new Date(item.remindDate);
             if (date.getTime() < Date.now()) {
-                dateinput.classList.add("overdue");
+                todoitem.classList.add("overdue");
             }
-            // add .done if done
-            if (item.done) dateinput.classList.add("done");
             // change the string into one that html would accept
             dateinput.value = item.remindDate.substring(0, 10);
         }
@@ -249,6 +250,38 @@ async function onLoad() {
     });
 
     // filter listener
+    // add filter checkbox listeners
+    let filters = document.getElementById("todofilter").getElementsByClassName("filter");
+    filters = Array.from(filters);  // change filters (array-like object) to array
+    filters.forEach(e => {
+        e.addEventListener("change", (event) => {
+            const button = event.currentTarget;
+            const fclass = button.value;    // value of checkbox is the right class name
+            const todolist = document.getElementById("todolist");
+
+            // if classList contains value
+            if (button.checked) {
+                todolist.classList.add(fclass);
+                todolist.classList.remove("not"+fclass);
+
+            } else {  // "not" prefix classes
+                todolist.classList.add("not"+fclass);
+                todolist.classList.remove(fclass);
+            }
+        })
+    })
+
+    document.getElementById("removefilter").addEventListener("click", () => {
+        const todolist = document.getElementById("todolist");
+        // has filters
+        if (todolist.classList.length != 0) {
+            todolist.className = "";
+            // uncheck all filter buttons
+            filters.forEach(button => {
+                button.checked = false;
+            })
+        }
+    })
     
     // poll changes to the page, then updates the db
     // setInterval(() => {

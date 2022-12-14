@@ -11,12 +11,9 @@ Each todo item has these fields:
    - For testing purposes, when setting a date that is today, the alert pops up 30 seconds later
  - Remove button (TODO)
 The website has:
- - Light/dark themes, can be toggled with button(TODO)
+ - Light/dark themes, can be toggled with button (TODO: beautify)
    - https://www.w3schools.com/howto/howto_css_switch.asp
  - Error messages shows up in order, and disappears automatically
- - Filter todo items by done/not done
-   - I'm using mostly CSS for this feature, specifically the pseudo-class selector :has, which is not supported on Firefox
- - Changes to items (creating, updating, or removing) are submitted to the server
-   - when the page is unloaded
-   - when the page is hidden
-   - every 5 minutes (TODO)
+ - Filter todo items by done/not done, overdue/not overdue
+   - When a filter button is unchecked (after being checked), the not-filter is on. To remove the filter, press "Remove All" (TODO: tri-state buttons?)
+ - Changes to items (creating, updating, or removing) are submitted to the server as changes happen (TODO: refactor)

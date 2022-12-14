@@ -8,22 +8,22 @@ block nav
 block center
     h1 Get 'em done!
     #todofilter
-        input(type="button" value="done")
+        span Filters:
+        input#donefilter.filter(type="checkbox" value="done") 
+        label(for="donefilter") Done
+        input#overduefilter.filter(type="checkbox" value="overdue")
+        label(for="overduefilter") Overdue 
+        input#removefilter(type="button" value="Remove All")
     #todolist 
         //-
-            .todoitem
+            .todoitem // .done or .overdue
                 label.checkcontainer
                     input(type="checkbox" checked=(item.done==1))
                     span.todocheck
                 .textcontainer
                     input.todotext(type="text" value=item.title)
                 .datecontainer
-                    if item.overdue && item.done
-                        input.tododate.overdue.done(type="date" value=item.remindDate)
-                    else if item.overdue
-                        input.tododate.overdue(type="date" value=item.remindDate)
-                    else
-                        input.tododate(type="date" value=item.remindDate)
+                    input.tododate(type="date" value=item.remindDate)
             // TODO: remove button
         #addTodoitem
             div#plus

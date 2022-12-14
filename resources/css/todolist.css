@@ -1,8 +1,54 @@
+/* Fonts */
+* {
+    font-family: "Times New Roman", Times, serif;
+}
+
+input[type*="text"] {   /* input containing text */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input[type="date"] {
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+/* Todo filters */
+#todofilter {
+    display: flex;
+    justify-content: left;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#todofilter *:not(label) {
+    margin-left: 0.5em;
+}
+
+#todolist.done .todoitem:not(.done) {
+    display: none;
+}
+
+#todolist.notdone .todoitem.done {
+    display: none;
+}
+
+#todolist.overdue .todoitem:not(.overdue) {
+    display: none;
+}
+
+#todolist.notoverdue .todoitem.overdue {
+    display: none;
+}
+
+/* Todo list */
 #todolist {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+#todolist > *:hover {
+    background-color: var(--todo-item-hover-color);
 }
 
 /* Todo item flex box */
@@ -136,12 +182,12 @@
 }
 
 /* Overdue but done */
-.datecontainer .tododate.overdue.done {
+.todoitem.overdue.done .datecontainer .tododate {
     color: rgb(12, 200, 12);
 }
 
 /* Overdue but not done */
-.datecontainer .tododate.overdue {
+.todoitem.overdue .datecontainer .tododate {
     color: red;
 }
 
@@ -151,10 +197,6 @@
     width: 100%;
     padding: 0;
     text-align: center;
-}
-
-#addTodoitem:hover {
-    background-color: var(--todo-item-add-hover-color);
 }
 
 #plus {
