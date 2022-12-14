@@ -11,7 +11,13 @@ server.use(express.urlencoded({extended:true}));
 server.use("/resources", express.static("resources"));
 
 server.get("/", (req, res) => {
-    res.render("todolist");
+    db.getTodoList(req.query).then(rows => {
+        res.status(200).render("todolist", {rows: rows});
+    }, err => {
+        console.log("Front page error");
+        console.log(err);
+        res.status(500).render("error", {errorMsg: err.code});
+    })
 });
 
 // api end points
@@ -20,14 +26,16 @@ server.get("/api/items", (req, res) => {
     db.getTodoList(req.query).then(rows => {
         res.json(rows);
     }, err => {
+        console.log("Get items error:");
+        console.log(err);
         res.status(500).send(err);
     })
 });
 
+// add item
 // sends status code 404 if request resulted in error
 server.post("/api/items", (req, res) => {
-    console.log(req.body);
-    let item = req.body.item;
+    let item = req.body;
     if (!item) {
         res.status(400).json({code:"Item (json) needed"});
         return;
@@ -35,14 +43,16 @@ server.post("/api/items", (req, res) => {
     db.addTodoItem(item).then(result => {
         console.log("item successfully added: ");
         console.log(item);
-        res.json(result);
     }, err => {
+        console.log("Add items error:");
+        console.log(err);
         res.status(500).send(err);
     })
 });
 
+// update item
 server.put("/api/items/:id", (req, res) => {
-    let item = req.body.item;
+    let item = req.body;
     let id = req.params.id;
     if (!item || !id) {
         res.status(400).json({code:"Item (json) or item id needed"});
@@ -53,6 +63,8 @@ server.put("/api/items/:id", (req, res) => {
         console.log(item);
         res.json(result);
     }, err => {
+        console.log("Update items error:");
+        console.log(err);
         res.status(500).send(err);
     })
 });

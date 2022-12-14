@@ -10,7 +10,7 @@
     --todo-check-hover-color: black;
     --todo-check-color: black;
     --todo-text-border-color: black;
-    --todo-date-background-color: white;
+    --todo-date-background-color: rgb(255, 242, 195);
     --todo-item-add-color: black;
 }
 
@@ -24,6 +24,6 @@
     --todo-check-hover-color: rgb(205, 205, 205);/*rgb(255, 227, 156);*/
     --todo-check-color: white;
     --todo-text-border-color: rgb(121, 170, 175);
-    --todo-date-background-color: rgb(5, 115, 121);
+    --todo-date-background-color: rgb(1, 128, 150);
     --todo-item-add-color: white;
 }

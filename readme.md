@@ -17,3 +17,5 @@ The website has:
  - Filter todo items by done/not done, overdue/not overdue
    - When a filter button is unchecked (after being checked), the not-filter is on. To remove the filter, press "Remove All" (TODO: tri-state buttons?)
  - Changes to items (creating, updating, or removing) are submitted to the server as changes happen (TODO: refactor)
+
+ TODO: front end js tracks .done and .overdue classes

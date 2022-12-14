@@ -4,12 +4,12 @@ html(theme="dark")
         meta(charset='UTF-8')
         link(rel='stylesheet' href='resources/css/themes.css')
         link(rel='stylesheet' href='resources/css/frame.css')
-        //- script(async='' defer='' src='resources/js/.js')
+        script(async='' defer='' src='resources/js/frame.js')
         block head 
 
     body
         div#nav
-            block nav
+            h1 todolist
             input#themeSelector(type="button" value="toggle theme")
         div#center
             #errorMsgContainer

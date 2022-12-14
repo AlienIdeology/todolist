@@ -2,8 +2,6 @@ extends frame.pug
 block head
     link(rel='stylesheet' href='resources/css/todolist.css')
     script(async='' defer='' src='resources/js/todolist.js')
-block nav
-    h1 todolist
 
 block center
     h1 Get 'em done!
@@ -15,13 +13,13 @@ block center
         label(for="overduefilter") Overdue 
         input#removefilter(type="button" value="Remove All")
     #todolist 
-        //-
-            .todoitem // .done or .overdue
+        each item in rows
+            .todoitem(id=item.id)
                 label.checkcontainer
                     input(type="checkbox" checked=(item.done==1))
                     span.todocheck
                 .textcontainer
-                    input.todotext(type="text" value=item.title)
+                    input.todotext(type="text" value=item.text)
                 .datecontainer
                     input.tododate(type="date" value=item.remindDate)
             // TODO: remove button
