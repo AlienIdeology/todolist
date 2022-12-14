@@ -2,6 +2,7 @@
 body {
     margin: 0%;
     background-color: var(--body-background-color);
+    color: var(--font-color);
 }
 
 div#nav {
@@ -17,7 +18,13 @@ div#nav * {
 div#nav h1 {
     text-align: center;
     font-size: 3em;
-    color: var(--font-color);
+}
+
+/* Toggle Theme button */
+/* TODO: css toggle button */
+#themeSelector {
+    position: fixed;
+    right: 0;
 }
 
 div#center {

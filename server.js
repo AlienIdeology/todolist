@@ -7,28 +7,11 @@ server.set("views", "templates");
 server.use(express.json());
 server.use(express.urlencoded({extended:true}));
 
-// globals
-let lightTheme = true;
-function makePugEnv() {
-    return {lightTheme: lightTheme};
-} 
-function makeErrorPugEnv(errorMsg) {
-    let pug = makePugEnv();
-    pug.error = true;
-    pug.errorMsg = errorMsg;
-    return pug;
-}
-
 // handle routing
 server.use("/resources", express.static("resources"));
 
 server.get("/", (req, res) => {
-    db.getTodoList(req.query).then(rows => {
-        res.render("todolist", makePugEnv());
-    }, err => {
-        console.log(err);
-        res.render("todolist", makeErrorPugEnv(`Unable to retrieve the todolist. (Reason: ${err.code})`));
-    })
+    res.render("todolist");
 });
 
 // api end points

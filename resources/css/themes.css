@@ -1,0 +1,29 @@
+/* light theme by default */
+:root:not([theme="dark"]) {
+    /* General and frame */
+    --font-color: black;
+    --body-background-color: #FAEAB1;
+    --nav-color: #e48816;
+    --center-color: #FAF8F1;
+
+    --todo-check-hover-color: black;
+    --todo-check-color: black;
+    --todo-text-border-color: black;
+    --todo-date-background-color: white;
+    --todo-item-add-hover-color: rgb(235, 234, 234);
+    --todo-item-add-color: black;
+}
+
+:root[theme="dark"] {
+    --font-color: white;
+    --body-background-color: rgb(0, 30, 47);
+    --nav-color: #05b6c6;
+    --center-color: rgb(0, 56, 88);
+
+    --todo-check-hover-color: rgb(205, 205, 205);/*rgb(255, 227, 156);*/
+    --todo-check-color: white;
+    --todo-text-border-color: rgb(121, 170, 175);
+    --todo-date-background-color: rgb(0, 83, 132);
+    --todo-item-add-hover-color: rgb(118, 196, 234);
+    --todo-item-add-color: white;
+}

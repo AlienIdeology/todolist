@@ -1,16 +1,16 @@
 doctype html
-head
-    meta(charset='UTF-8')
-    if lightTheme
-        link(rel='stylesheet' href='resources/css/lightTheme.css')
-    else 
-        link(rel='stylesheet' href='resources/css/darkTheme.css')
-    //- script(async='' defer='' src='resources/js/.js')
-    block head 
+html(theme="dark")
+    head
+        meta(charset='UTF-8')
+        link(rel='stylesheet' href='resources/css/themes.css')
+        link(rel='stylesheet' href='resources/css/frame.css')
+        //- script(async='' defer='' src='resources/js/.js')
+        block head 
 
-body
-    div#nav
-        block nav
-    div#center
-        #errorMsgContainer
-        block center
+    body
+        div#nav
+            block nav
+            input#themeSelector(type="button" value="toggle theme")
+        div#center
+            #errorMsgContainer
+            block center

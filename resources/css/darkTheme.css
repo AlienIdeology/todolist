@@ -1,5 +1,0 @@
-/* Bridg between darkColors.css and style.css
-Allow style.css to access color variables in darkColors.css */
-@import "./darkColors.css";
-@import "./frame.css";
-@import "./todolist.css";

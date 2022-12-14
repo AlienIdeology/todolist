@@ -154,7 +154,7 @@ function regItemListener(item) {
 
 // add, update, or remove items. call this periodically
 async function updateItems() {
-    console.log("Updating items");
+    let count = 0;
     for (let item of items) {
         if (item.status == itemStatus.created) {
             // ignore new items with no titles
@@ -177,6 +177,7 @@ async function updateItems() {
                 let error = await res.json();
                 displayErrorMessage(`Unable to add the item \"${item.item.text}\" (Reason: ${error.code})`);
             }
+            count++;
         } else if (item.status == itemStatus.updated) {
             const ep = endPoints.updateItem;
             const id = item.item.id;
@@ -191,9 +192,11 @@ async function updateItems() {
                 let error = await res.json();
                 displayErrorMessage(`Unable to update the item \"${item.item.text}\" (Reason: ${error.code})`);
             }
+            count++;
         } else if (item.status == itemStatus.removed) {
         }
     }
+    console.log(`Updating ${count} items`);
 }
 
 function displayErrorMessage(errorMsg) {
@@ -215,7 +218,7 @@ async function onLoad() {
     let res = await fetch(ep.string, {method: ep.method});
     if (!res.ok) {
         let error = await res.json();
-        displayErrorMessage(`Unable to load items (Reason: ${error.code}). Please reload`);
+        displayErrorMessage(`Unable to retrieve todo items (Reason: ${error.code}). Please reload`);
     }
     else {
         let jsonitems = await res.json();
@@ -237,6 +240,15 @@ async function onLoad() {
 
     // add event listeners
     plusItem.addEventListener("click", createEmptyItem);
+
+    // theme selector
+    document.getElementById("themeSelector").addEventListener("click", () => {
+        // html/root element
+        let theme = document.documentElement.getAttribute("theme");
+        document.documentElement.setAttribute("theme", theme == "dark" ? "light" : "dark");
+    });
+
+    // filter listener
     
     // poll changes to the page, then updates the db
     // setInterval(() => {
@@ -254,3 +266,12 @@ function updateBeforePageChange() {
 }
 
 window.addEventListener('visibilitychange', updateBeforePageChange);
+
+// Problem: this is unreliable, updateItems might not finish executing before the program terminates
+// So not all items will be updated
+// Possible solution: Update each item individually as they gets changed
+window.addEventListener('beforeunload', () => {
+    console.log("unloading");
+    updateItems();
+    return "saving";
+});

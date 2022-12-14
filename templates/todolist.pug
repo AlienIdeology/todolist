@@ -1,12 +1,14 @@
 extends frame.pug
 block head
+    link(rel='stylesheet' href='resources/css/todolist.css')
     script(async='' defer='' src='resources/js/todolist.js')
 block nav
     h1 todolist
 
 block center
     h1 Get 'em done!
-
+    #todofilter
+        input(type="button" value="done")
     #todolist 
         //-
             .todoitem
