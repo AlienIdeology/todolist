@@ -45,14 +45,14 @@ async function addTodoItem(item) {
     let insertStr = "";
     let arr = [];
     for (let i = 0; i < keys.length; i++) {
-        colList += keys[i];
-        insertStr += "?";
-        if (i != keys.length-1) {
-            colList += ",";
-            insertStr += ",";
-        }
+        if (keys[i] == "id") continue;  // ignore item id so id is auto-incremented
+        colList += keys[i] + ",";
+        insertStr += "?,";
         arr.push(item[keys[i]]);
     }
+    // delete the last ","
+    colList = colList.substring(0, colList.length-1);
+    insertStr = insertStr.substring(0, insertStr.length-1);
 
     return new Promise((resolve, reject) => {
         server.query(`INSERT INTO ${dbName} (${colList}) VALUES (${insertStr});`, 
@@ -65,17 +65,17 @@ async function addTodoItem(item) {
 }
 exports.addTodoItem = addTodoItem;
 
-async function updateTodoItem(id, columns) {
-    let keys = Object.keys(columns);
+async function updateTodoItem(id, item) {
+    let keys = Object.keys(item);
     let colList = "";
     let arr = [];
     for (let i = 0; i < keys.length; i++) {
-        colList += keys[i];
-        if (i != keys.length-1) {
-            colList += "=?,";
-        }
-        arr.push(columns[keys[i]]);
+        if (keys[i] == "id") continue;  // ignore item id so id is unchanged
+        colList += keys[i] + "=?,";
+        arr.push(item[keys[i]]);
     }
+    // delete the last ","
+    colList = colList.substring(0, colList.length-1);
 
     arr.push(id);
     return new Promise((resolve, reject) => {

@@ -32,41 +32,35 @@ div#center {
     background-color: var(--center-color)
 }
 
-#errorMsg {
+/* Error Messages container */
+#errorMsgContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
     position: fixed;
-    /* top: 0; */
     left: 35vw;
+    width: 30vw;
+    /* height: 100vh; */
+    z-index: 5; /* large enough to stack on anything */
+}
+
+/* Possible TODO: let the error message float up when previous ones disappear */
+.errorMsg {
     background-color: rgb(255, 90, 90);
     opacity: 0.9;
-    width: 30vw;
+    width: 100%;
     height: 4em;
     padding: 1em;
-
-    /* Make the error message disappear in 5 seconds */
-    -moz-animation: cssAnimation 0s ease-in 5s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 5s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 5s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
+    word-wrap: break-word;
+    
+    /* Ensure that the width of this is the same as the container regardless of padding */
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
-@keyframes cssAnimation {
-    to {
-        width: 0;
-        height: 0;
-        padding: 0;
-        overflow:hidden;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width: 0;
-        height: 0;
-        padding: 0;
-        visibility:hidden;
-    }
+/* Create spacing between error messages */
+.errorMsg:not(:last-child) {
+    margin-bottom: 1em;
 }

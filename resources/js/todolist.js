@@ -1,25 +1,31 @@
 const endPoints = {
-    getTodoItems : {
+    getItems : {
         string : "/api/items",
         method : "GET"
     },
-    addTodoItem : {
+    addItem : {
         string : "/api/items/add",
         method : "POST"
+    },
+    updateItem : {
+        string : "/api/items/update/",
+        method: "POST"
     }
 }
 
 const itemStatus = {
     removed: -1,
-    unchanged: 0,
-    changed: 1,
+    unupdated: 0,
+    updated: 1,
     created: 2
 };
+
 const items = []; // array of item wrappers {item: item, status: ...}
 let itemsAdded = 0;
+const POLL_FREQ = 60000; // 1 min in ms
 
 // create DOM element of a todo item based on a json item
-function newItem(item) {
+function newDOMItem(item) {
     let todoitem = document.createElement("div");
     todoitem.classList.add("todoitem");
 
@@ -44,7 +50,7 @@ function newItem(item) {
         let textinput = document.createElement("input");
         textinput.classList.add("todotext");
         textinput.type = "text";
-        if (item.text) textinput.value = item.text;
+        if (item.text) textinput.value = item.text || "";
         textcontainer.appendChild(textinput);
         todoitem.appendChild(textcontainer);
     }
@@ -87,11 +93,12 @@ function createEmptyItem() {
         remindDate: null
     };
 
-    let domItem = newItem(emptyJsItem);  // -1 for new item?
+    let domItem = newDOMItem(emptyJsItem);  // -1 for new item?
     regItemListener(domItem);
 
     // update the items list
     itemsAdded++;
+    // newly created items have a negative Ids to avoid conflict with created items
     domItem.id = -1 * itemsAdded;
     emptyJsItem.id = -1 * itemsAdded;
     items.push({
@@ -114,67 +121,136 @@ function addChangedItem(event) {
     const item = event.currentTarget;
 
     items.forEach(it => {
+        // TODO: add removed item
         // only set status to "changed" if the item has existed (is not new)
         if (it.item.id == item.id) {
-            if (it.status == itemStatus.unchanged) {
-                it.status = itemStatus.changed;
+            if (it.status == itemStatus.unupdated) {
+                it.status = itemStatus.updated;
             }
             const id = it.item.id;  // temporarily store it
-            it.item = parseItem(item);  // replace the old item with the new one
+            it.item = parseDOMItem(item);  // replace the old item with the new one
             it.item.id = id;
             console.log("Input changed:");
-            console.log(items);
+            console.log(it);
         } 
     });
 }
 
-function parseItem(domItem) {
+function parseDOMItem(domItem) {
     let item = {};
     let checkinput = domItem.getElementsByClassName("checkcontainer")[0].getElementsByTagName("input")[0];
-    if (checkinput.checked)
-        item.done = true;
+    item.done = checkinput.checked;
     let textinput = domItem.getElementsByClassName("todotext")[0];
-    item.text = textinput ? textinput.value : "";
+    item.text = textinput.value || "";
     let dateinput = domItem.getElementsByClassName("tododate")[0];
-    item.date = dateinput ? dateinput.value : null;
+    item.remindDate = dateinput.value || null;
     return item;
 }
 
 // register a listener to a todo item
 function regItemListener(item) {
     item.addEventListener("change", addChangedItem);
-    // TODO: add remove item listener (blocks bubbling)
 }
 
-async function addItems() {
-    if (newItemIds.length == 0) return;
-    for (newItem of newItemIds) {
-
+// add, update, or remove items. call this periodically
+async function updateItems() {
+    console.log("Updating items");
+    for (let item of items) {
+        if (item.status == itemStatus.created) {
+            // ignore new items with no titles
+            if (item.item.text.length == 0) continue;
+            const ep = endPoints.addItem;
+            let res = await fetch(ep.string, {
+                method: ep.method,
+                body: JSON.stringify(item),
+                headers : {'Content-Type': 'application/json'}
+            });
+            if (res.ok) {
+                item.status = itemStatus.unupdated;
+                // update the id of the created todo item so it's no longer negative
+                // also update the id of the dom element
+                let domItem = document.getElementById(item.item.id);
+                let json = await res.json();
+                domItem.id = json.insertId;
+                item.item.id = json.insertId;
+            } else {
+                let error = await res.json();
+                displayErrorMessage(`Unable to add the item \"${item.item.text}\" (Reason: ${error.code})`);
+            }
+        } else if (item.status == itemStatus.updated) {
+            const ep = endPoints.updateItem;
+            const id = item.item.id;
+            let res = await fetch(ep.string+id, {
+                method: ep.method,
+                body: JSON.stringify(item),
+                headers : {'Content-Type': 'application/json'}
+            })
+            if (res.ok) {
+                item.status = itemStatus.unupdated;
+            } else {
+                let error = await res.json();
+                displayErrorMessage(`Unable to update the item \"${item.item.text}\" (Reason: ${error.code})`);
+            }
+        } else if (item.status == itemStatus.removed) {
+        }
     }
+}
+
+function displayErrorMessage(errorMsg) {
+    let err = document.createElement("div");
+    err.classList.add("errorMsg");
+    err.textContent = errorMsg;
+    let errContainer = document.getElementById("errorMsgContainer");
+    errContainer.appendChild(err);
+    // delete error message after 5 seconds
+    setTimeout(() => {
+        errContainer.removeChild(err);
+    }, 5000);
 }
 
 async function onLoad() {
     let plusItem = document.getElementById("addTodoitem");
     // load items
-    let ep = endPoints.getTodoItems;
-    let jsonitems = await fetch(ep.string, {method: ep.method})
-        .then((res) => res.json());
+    let ep = endPoints.getItems;
+    let res = await fetch(ep.string, {method: ep.method});
+    if (!res.ok) {
+        let error = await res.json();
+        displayErrorMessage(`Unable to load items (Reason: ${error.code}). Please reload`);
+    }
+    else {
+        let jsonitems = await res.json();
 
-    let todolist = document.getElementById("todolist");
-    
-    for (let it of jsonitems) {
-        console.log("item:");
-        console.log(it);
-        items.push({
-            item: it,
-            status: itemStatus.unchanged
-        });
-        let domIt = newItem(it);
-        regItemListener(domIt);
-        todolist.insertBefore(domIt, plusItem);   // always insert before the last element (+ sign)
+        let todolist = document.getElementById("todolist");
+        
+        for (let it of jsonitems) {
+            console.log("item:");
+            console.log(it);
+            items.push({
+                item: it,
+                status: itemStatus.unupdated
+            });
+            let domIt = newDOMItem(it);
+            regItemListener(domIt);
+            todolist.insertBefore(domIt, plusItem);   // always insert before the last element (+ sign)
+        }
     }
 
     // add event listeners
     plusItem.addEventListener("click", createEmptyItem);
+    
+    // poll changes to the page, then updates the db
+    // setInterval(() => {
+    //     console.log("polling...");
+    //     updateItems();
+    //     periodicUpdate();
+    // }, POLL_FREQ);
 }
+
 window.addEventListener("load", onLoad);
+
+function updateBeforePageChange() {
+    if (document.visibilityState == "hidden")
+        updateItems();
+}
+
+window.addEventListener('visibilitychange', updateBeforePageChange);
