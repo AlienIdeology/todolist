@@ -1,15 +1,19 @@
 const endPoints = {
-    getItems : {
-        string : "/api/items",
-        method : "GET"
+    getItems: {
+        string: "/api/items",
+        method: "GET"
     },
-    addItem : {
-        string : "/api/items",
-        method : "POST"
+    addItem: {
+        string: "/api/items",
+        method: "POST"
     },
-    updateItem : {
-        string : "/api/items/", // + :id routing parameter
+    updateItem: {
+        string: "/api/items/", // + :id routing parameter
         method: "PUT"
+    },
+    deleteItem: {
+        string: "/api/items/", // + :id routing parameter
+        method: "DELETE"
     }
 }
 
@@ -94,6 +98,18 @@ function newDOMItem(jsonItem) {
         datecontainer.appendChild(dateinput);
         todoitem.appendChild(datecontainer);
     }
+    // remove
+    {
+        let deletecontainer = document.createElement("div");
+        deletecontainer.classList.add("deletecontainer");
+        let deletebutton = document.createElement("input");
+        deletebutton.type = "button";
+        let replacebutton = document.createElement("span");
+        replacebutton.classList.add("tododelete");
+        deletecontainer.appendChild(deletebutton);
+        deletecontainer.appendChild(replacebutton);
+        todoitem.appendChild(deletecontainer);
+    }
     return setDOMProperties(todoitem, jsonItem.id);
 }
 
@@ -155,8 +171,7 @@ async function onItemChanged(domItem) {
             displayErrorMessage(`Unable to add the item \"${item.text}\" (Reason: ${error.code})`);
         }
     } else {
-        // update or remove item
-        // TODO: removed items
+        // update item
         const ep = endPoints.updateItem;
         let res = await fetch(ep.string+item.id, {
             method: ep.method,
@@ -175,9 +190,35 @@ async function onItemChanged(domItem) {
     console.log(item);
 }
 
+async function onItemDelete(event, domItem) {
+    // if click event is not trigged on the delete button, ignore
+    if (!event.target.classList.contains("tododelete")) {
+        return;
+    }
+
+    const id = domItem.id;
+    // old item -> delete from database
+    if (id > 0) {
+        const ep = endPoints.deleteItem;
+        let res = await fetch(ep.string+id, {
+            method: ep.method,
+        })
+        if (!res.ok) {
+            let error = await res.json();
+            displayErrorMessage(`Unable to delete the item with id \"${id}\" (Reason: ${error.code})`);
+            return;
+        }
+    }
+    // remove item from DOM if it is 
+    // (1) Successfully deleted from the database
+    // (2) A newly created item, not yet in the database
+    domItem.remove();
+}
+
 // register a listener to a todo item
 function regItemListener(domItem) {
     domItem.addEventListener("change", () => {onItemChanged(domItem)});
+    domItem.addEventListener("click", (event) => {onItemDelete(event, domItem)}); // delete button
 }
 
 async function onLoad() {
@@ -191,7 +232,7 @@ async function onLoad() {
     // plus button listeners
     document.getElementById("addTodoitem").addEventListener("click", createEmptyItem);
 
-    // filter listener
+    // filter listeners
     // add filter checkbox listeners
     let filters = document.getElementById("todofilter").getElementsByClassName("filter");
     filters = Array.from(filters);  // change filters (array-like object) to array
@@ -235,7 +276,7 @@ function displayErrorMessage(errorMsg) {
     errContainer.appendChild(err);
     // delete error message after 5 seconds
     setTimeout(() => {
-        errContainer.removeChild(err);
+        err.remove();
     }, 5000);
 }
 

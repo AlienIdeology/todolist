@@ -67,7 +67,7 @@ input[type="date"] {
     flex-grow: 0;
 }
 
-.todoitem > .checkcontainer {
+.todoitem > .checkcontainer, .todoitem > .deletecontainer {
     flex-grow: 1;
 }
 
@@ -76,8 +76,9 @@ input[type="date"] {
 }
 
 .todoitem > .datecontainer {
-    flex-grow: 5;
+    flex-grow: 4;
 }
+
 
 /* Checkbox (circle) */
 /* The container must be a label for the check to go through the custom checkbox to the browser checkbox */
@@ -192,6 +193,57 @@ input[type="date"] {
     color: red;
 }
 
+.deletecontainer {
+    cursor: pointer;
+}
+
+.deletecontainer input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border: 0;
+    padding: 0;
+}
+
+/* Remove button */
+.tododelete {
+    display:inline-block;
+    width: 2em;
+    height: 2em;
+    
+    background:
+      linear-gradient(var(--todo-add-delete-item-color) 0 0),
+      linear-gradient(var(--todo-add-delete-item-color) 0 0);
+    background-position:center;
+    background-size: 50% 2px,2px 50%; /*thickness = 2px, length = 50% (25px)*/
+    background-repeat:no-repeat;
+
+    /* Make the plus sign a cross sign */
+    -webkit-transform:rotate(45deg);
+    -moz-transform:rotate(45deg);
+    transform:rotate(45deg);
+
+    -webkit-transition: -webkit-transform 1s ease-out;
+    -moz-transition: -moz-transform 1s ease-out;
+    transition: transform 0.5s ease-out;
+}
+
+.deletecontainer:hover .tododelete{
+    -webkit-transform:rotate(-45deg);
+    -moz-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+}
+
+
+@keyframes rotateAnimation {
+    to {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
+
 /* "Add Item" Row */
 #addTodoitem {
     cursor: pointer;
@@ -206,8 +258,8 @@ input[type="date"] {
     height: 2em;
     
     background:
-      linear-gradient(var(--todo-item-add-color) 0 0),
-      linear-gradient(var(--todo-item-add-color) 0 0);
+      linear-gradient(var(--todo-add-delete-item-color) 0 0),
+      linear-gradient(var(--todo-add-delete-item-color) 0 0);
     background-position:center;
     background-size: 50% 2px,2px 50%; /*thickness = 2px, length = 50% (25px)*/
     background-repeat:no-repeat;

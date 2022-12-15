@@ -22,6 +22,10 @@ block center
                     input.todotext(type="text" value=item.text)
                 .datecontainer
                     input.tododate(type="date" value=item.remindDate)
-            // TODO: remove button
+                label.deletecontainer
+                    input(type="button")
+                    span.tododelete
         #addTodoitem
             div#plus
+    //- This fixes the bug where css transition fires on page load in Chrome:
+    script 

@@ -41,8 +41,9 @@ server.post("/api/items", (req, res) => {
         return;
     }
     db.addTodoItem(item).then(result => {
-        console.log("item successfully added: ");
+        console.log("Item successfully added: ");
         console.log(item);
+        res.json(result);
     }, err => {
         console.log("Add items error:");
         console.log(err);
@@ -59,8 +60,22 @@ server.put("/api/items/:id", (req, res) => {
         return;
     }
     db.updateTodoItem(id, item).then(result => {
-        console.log("item successfully updated: ");
+        console.log("Item successfully updated: ");
         console.log(item);
+        res.json(result);
+    }, err => {
+        console.log("Update items error:");
+        console.log(err);
+        res.status(500).send(err);
+    })
+});
+
+// delete item
+server.delete("/api/items/:id", (req, res) => {
+    const id = req.params.id;
+    db.deleteTodoItem(id).then(result => {
+        console.log("Item successfully deleted: ");
+        console.log(result);
         res.json(result);
     }, err => {
         console.log("Update items error:");

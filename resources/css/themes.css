@@ -11,7 +11,7 @@
     --todo-check-color: black;
     --todo-text-border-color: black;
     --todo-date-background-color: rgb(255, 242, 195);
-    --todo-item-add-color: black;
+    --todo-add-delete-item-color: black;
 }
 
 :root[theme="dark"] {
@@ -25,5 +25,5 @@
     --todo-check-color: white;
     --todo-text-border-color: rgb(121, 170, 175);
     --todo-date-background-color: rgb(1, 128, 150);
-    --todo-item-add-color: white;
+    --todo-add-delete-item-color: white;
 }

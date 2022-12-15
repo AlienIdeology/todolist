@@ -87,3 +87,14 @@ async function updateTodoItem(id, item) {
     })
 }
 exports.updateTodoItem = updateTodoItem;
+
+async function deleteTodoItem(id) {
+    return new Promise((resolve, reject) => {
+        server.query(`DELETE FROM ${dbName} WHERE id=?;`,
+            [id], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        })
+    })
+}
+exports.deleteTodoItem = deleteTodoItem;
