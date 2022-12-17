@@ -1,5 +1,5 @@
 doctype html
-html(theme="dark")
+html(theme=theme)
     head
         meta(charset='UTF-8')
         link(rel='stylesheet' href='resources/css/themes.css')
@@ -10,7 +10,10 @@ html(theme="dark")
     body
         div#nav
             h1 todolist
-            input#themeSelector(type="button" value="toggle theme")
+            div#themeSelector(title="toggle theme")
+                .circle 
+                .semicircle
+                input(type="button" value="toggle theme")
         div#center
             #errorMsgContainer
             block center

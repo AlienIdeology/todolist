@@ -1,14 +1,14 @@
 // Obtain database info and password
-const dbInfo = require("./db_info");
+const private = require("./private.json");
 const mysql = require("mysql");
 const server = mysql.createPool({
-    host: dbInfo.host,
-    database: dbInfo.database,
-    user: dbInfo.user,
-    password: dbInfo.password,
+    host: private.database.host,
+    database: private.database.database,
+    user: private.database.user,
+    password: private.database.password,
     connectionLimit: 5
 });
-const dbName = "todolist";
+const tableName = private.database.tableName;
 exports.server = server;
 
 // build a query string and an array of values to be inserted
@@ -24,7 +24,7 @@ function buildQueryString(selector, options) {
         arr.push(options[keys[i]]);
     }
     if (cond.length != 0) cond = " WHERE " + cond + ";";
-    return {queryString: `SELECT ${selector} FROM ${dbName}${cond}`,
+    return {queryString: `SELECT ${selector} FROM ${tableName}${cond}`,
         values: arr};
 }
 
@@ -55,7 +55,7 @@ async function addTodoItem(item) {
     insertStr = insertStr.substring(0, insertStr.length-1);
 
     return new Promise((resolve, reject) => {
-        server.query(`INSERT INTO ${dbName} (${colList}) VALUES (${insertStr});`, 
+        server.query(`INSERT INTO ${tableName} (${colList}) VALUES (${insertStr});`, 
             arr,
             (err, rows) => {
             if (err) reject(err);
@@ -79,7 +79,7 @@ async function updateTodoItem(id, item) {
 
     arr.push(id);
     return new Promise((resolve, reject) => {
-        server.query(`UPDATE ${dbName} SET ${colList} WHERE id=?;`,
+        server.query(`UPDATE ${tableName} SET ${colList} WHERE id=?;`,
             arr, (err, rows) => {
             if (err) reject(err);
             else resolve(rows);
@@ -90,7 +90,7 @@ exports.updateTodoItem = updateTodoItem;
 
 async function deleteTodoItem(id) {
     return new Promise((resolve, reject) => {
-        server.query(`DELETE FROM ${dbName} WHERE id=?;`,
+        server.query(`DELETE FROM ${tableName} WHERE id=?;`,
             [id], (err, rows) => {
             if (err) reject(err);
             else resolve(rows);

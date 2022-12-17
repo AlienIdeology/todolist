@@ -1,29 +1,45 @@
-/* light theme by default */
-:root:not([theme="dark"]) {
+:root[theme="yellow"] {
     /* General and frame */
     --font-color: black;
-    --body-background-color: #FAEAB1;
-    --nav-color: #e48816;
-    --center-color: #FAF8F1;
+    --nav-color: rgb(228, 136, 22);
+    --body-background-color: rgb(250, 234, 177);
+    --center-color: rgb(250, 248, 241);
 
     --todo-item-hover-color: rgb(235, 234, 234);
     --todo-check-hover-color: black;
     --todo-check-color: black;
     --todo-text-border-color: black;
+    --todo-date-text-color: var(--font-color);
     --todo-date-background-color: rgb(255, 242, 195);
     --todo-add-delete-item-color: black;
 }
 
-:root[theme="dark"] {
+:root[theme="blue"] {
     --font-color: white;
+    --nav-color: rgb(5, 182, 198);
     --body-background-color: rgb(0, 30, 47);
-    --nav-color: #05b6c6;
     --center-color: rgb(0, 56, 88);
 
     --todo-item-hover-color: rgb(3, 90, 141);
     --todo-check-hover-color: rgb(205, 205, 205);/*rgb(255, 227, 156);*/
     --todo-check-color: white;
     --todo-text-border-color: rgb(121, 170, 175);
+    --todo-date-text-color: var(--font-color);
     --todo-date-background-color: rgb(1, 128, 150);
+    --todo-add-delete-item-color: white;
+}
+
+:root[theme="black"] {
+    --font-color: rgb(242, 255, 255);
+    --nav-color: rgb(21, 23, 26);
+    --body-background-color: rgb(31, 36, 40);
+    --center-color: rgb(36, 41, 46);
+
+    --todo-item-hover-color: rgb(45, 54, 63);
+    --todo-check-hover-color: rgb(205, 205, 205);
+    --todo-check-color: white;
+    --todo-text-border-color: rgb(208, 255, 253);
+    --todo-date-text-color: rgb(0, 0, 0);
+    --todo-date-background-color: rgb(219, 219, 219);
     --todo-add-delete-item-color: white;
 }

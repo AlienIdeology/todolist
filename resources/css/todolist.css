@@ -177,7 +177,7 @@ input[type="date"] {
     top: 5%;
     width: 100%;
     height: 90%;
-    color: var(--font-color);
+    color: var(--todo-date-text-color);
     background-color: var(--todo-date-background-color);
     border-width: 0;
     font-weight: bold;
@@ -211,7 +211,7 @@ input[type="date"] {
     display:inline-block;
     width: 2em;
     height: 2em;
-    
+
     background:
       linear-gradient(var(--todo-add-delete-item-color) 0 0),
       linear-gradient(var(--todo-add-delete-item-color) 0 0);
@@ -256,7 +256,7 @@ input[type="date"] {
     display:inline-block;
     width: 2em;
     height: 2em;
-    
+
     background:
       linear-gradient(var(--todo-add-delete-item-color) 0 0),
       linear-gradient(var(--todo-add-delete-item-color) 0 0);

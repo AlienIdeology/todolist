@@ -1,0 +1,12 @@
+{
+    "database": {
+        "host": "host name",
+        "database": "database name",
+        "user": "username",
+        "password": "password here",
+        "tableName": "table name"
+    },
+    "session": {
+        "secret": "session secret"
+    }
+}

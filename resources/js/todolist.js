@@ -229,7 +229,7 @@ async function onLoad() {
         regItemListener(domItem);
     });
 
-    // plus button listeners
+    // plus button listener
     document.getElementById("addTodoitem").addEventListener("click", createEmptyItem);
 
     // filter listeners

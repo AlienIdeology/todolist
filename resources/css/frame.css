@@ -6,6 +6,7 @@ body {
 }
 
 div#nav {
+    position: relative;
     background-color: var(--nav-color);
     padding: 1em;
     margin-bottom: 0;
@@ -21,10 +22,55 @@ div#nav h1 {
 }
 
 /* Toggle Theme button */
-/* TODO: css toggle button */
 #themeSelector {
-    position: fixed;
-    right: 0;
+    position: absolute;
+    top: calc((100% - 2em) / 2);
+    right: 2.5%;
+    width: 2em;
+    height: 2em;
+    /* height: 2%;
+    padding: 2%;
+    box-sizing: border-box;  To allow height be the same as width */
+    z-index: 1;
+
+    border-width: 0;
+    border-radius: 10px;
+}
+
+#themeSelector .circle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 2;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--font-color);;
+    border-radius: 5em;
+}
+
+#themeSelector .semicircle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 2;
+    background-color: var(--font-color);;
+    transform: rotate(90deg) translate(25%, -50%);
+    border-radius: 5em 5em 0 0;
+}
+
+#themeSelector input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    opacity: 0;
 }
 
 div#center {

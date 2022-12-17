@@ -11,6 +11,7 @@ Each todo item has these fields:
  - Remove button
    - Spins around on hover
    - There is a bug with Google Chrome where the css transition property might fire on page load/reload. Adding an empty script tag at the end of the html body seems to have fixed it most of the time.
+
 The website has:
  - Light/dark themes, can be toggled with button (TODO: beautify)
    - https://www.w3schools.com/howto/howto_css_switch.asp
