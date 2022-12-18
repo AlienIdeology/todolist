@@ -23,7 +23,7 @@
  - Changes to items (creating, updating, or removing) are submitted to the server as changes happen
    - If you cloned this repo, make sure to rename the file `examplePrivate.json` to `private.json` and replace the string values.
 
-Future directions:
+## Future directions:
  - User system
  - Categories
  - Tags
