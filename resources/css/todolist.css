@@ -14,28 +14,187 @@ input[type="date"] {
 /* Todo filters */
 #todofilter {
     display: flex;
-    justify-content: left;
-    margin-top: 1em;
-    margin-bottom: 1em;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin: 1.5em;
 }
 
-#todofilter *:not(label) {
-    margin-left: 0.5em;
+/* Flex container for each filter */
+#todofilter > * {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
-#todolist.done .todoitem:not(.done) {
+#todofilter > * > * {
+    margin: 0.3em 0;
+}
+
+#todofilter > * > span {
+    align-self: flex-start;
+}
+
+/* Filter container */
+.toggles3 {
+    position:relative;
+    font-size:1em; /* Size of the whole switch*/
+    align-self: flex-end;
+}
+
+/* Move radio buttons off screen */
+.radio1,
+.radio2,
+.radio3 {
+    position: absolute;
+    left: -9999px;
+}
+
+/* Container for the toggle on screen */
+.sliderContainer{
+    height: 2em;
+    width: 6em;
+    margin: 2px auto;
+    position: relative;
+    display: inline-block;
+    background: var(--todo-filter-background-color);
+
+    --button-width: calc(6em / 3);
+    --pos2-left: calc(6em / 3);  /* relative to width */
+    --pos3-left: calc(6em / 3 * 2);
+    border-radius: 2em;
+
+    /* Variable for check and cross mark line width */
+    --line-width: 3px;
+}
+
+/* Each label where user can click to toggle */
+.label1,
+.label2,
+.label3 {
+    height: 100%;
+    width: var(--button-width);
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    cursor: pointer;
+    left: 0;
+    z-index: 2;
+}
+
+/* Set the position of 2nd and 3rd label */
+.label2 {
+    left: var(--pos2-left);
+}
+
+.label3 {
+    left: var(--pos3-left);
+}
+
+/* The moving component of the toggle */
+.slider {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 100%;
+    width: var(--button-width);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+    cursor: default;
+    /* pointer-events: none;
+    cursor: default; */
+
+    border-radius: 2em;
+    background-color:var(--nav-color);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+/* Toggle behavior */
+.radio1:checked ~ .sliderContainer .slider {
+    background-color: var(--color-green);
+}
+  
+.radio2:checked ~ .sliderContainer .slider {
+    -webkit-transform: translateX(var(--pos2-left));
+    -ms-transform: translateX( var(--pos2-left));
+    transform: translateX(var(--pos2-left));
+}
+  
+.radio3:checked ~ .sliderContainer .slider {
+    -webkit-transform: translateX(var(--pos3-left));
+    -ms-transform: translateX(var(--pos3-left));
+    transform: translateX(var(--pos3-left));
+
+    background-color: var(--color-red);
+}
+
+/* The style of the content of these labels */
+.sliderContainer .check {
+
+    position: inherit;
+    top: 20%;
+    left: 35%;
+    /* Display a check mark */
+    transform-origin: center;
+    transform: rotate(45deg);
+    height: 40%;
+    width: 20%;
+    border-bottom: var(--line-width) solid var(--font-color);
+    border-right: var(--line-width) solid var(--font-color);
+}
+
+.sliderContainer .text {
+    position: relative;
+    display: inline-block;
+    width: var(--button-width);
+    height: 1em;
+    /* line-height: 0; */
+    font-size: 1em;
+    padding: 0;
+    top: calc((100% - 1em) / 2);
+    text-align: center;
+    z-index: 4;
+    /* vertical-align: middle; */
+}
+
+.sliderContainer .cross {
+    height: 100%;
+    width: var(--button-width);
+    position: inherit;
+    /* Display a cross mark */
+    background:
+      linear-gradient(var(--font-color) 0 0),
+      linear-gradient(var(--font-color) 0 0);
+    background-position:center;
+    background-size: 50% var(--line-width), var(--line-width) 50%; /*thickness = 2px, length = 50% (25px)*/
+    background-repeat:no-repeat;
+
+    /* Make the plus sign a cross sign */
+    -webkit-transform:rotate(45deg);
+    -moz-transform:rotate(45deg);
+    transform:rotate(45deg);
+}
+
+/* Filter functionality */
+#todolist[donefilter="done"] .todoitem:not(.done) {
     display: none;
 }
 
-#todolist.notdone .todoitem.done {
+#todolist[donefilter="notdone"] .todoitem.done {
     display: none;
 }
 
-#todolist.overdue .todoitem:not(.overdue) {
+#todolist[overduefilter="overdue"] .todoitem:not(.overdue) {
     display: none;
 }
 
-#todolist.notoverdue .todoitem.overdue {
+#todolist[overduefilter="notoverdue"] .todoitem.overdue {
     display: none;
 }
 
@@ -185,12 +344,12 @@ input[type="date"] {
 
 /* Overdue but done */
 .todoitem.overdue.done .datecontainer .tododate {
-    color: rgb(12, 200, 12);
+    color: var(--color-green);
 }
 
 /* Overdue but not done */
 .todoitem.overdue .datecontainer .tododate {
-    color: red;
+    color: var(--color-red);
 }
 
 .deletecontainer {
@@ -256,7 +415,7 @@ input[type="date"] {
     display:inline-block;
     width: 2em;
     height: 2em;
-
+    
     background:
       linear-gradient(var(--todo-add-delete-item-color) 0 0),
       linear-gradient(var(--todo-add-delete-item-color) 0 0);

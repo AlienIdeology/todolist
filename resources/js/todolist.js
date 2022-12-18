@@ -106,6 +106,7 @@ function newDOMItem(jsonItem) {
         deletebutton.type = "button";
         let replacebutton = document.createElement("span");
         replacebutton.classList.add("tododelete");
+        replacebutton.classList.add("cross");
         deletecontainer.appendChild(deletebutton);
         deletecontainer.appendChild(replacebutton);
         todoitem.appendChild(deletecontainer);
@@ -239,31 +240,9 @@ async function onLoad() {
     filters.forEach(e => {
         e.addEventListener("change", (event) => {
             const button = event.currentTarget;
-            const fclass = button.value;    // value of checkbox is the class name to be added/removed to todolist
             const todolist = document.getElementById("todolist");
-
-            // if classList contains value
-            if (button.checked) {
-                todolist.classList.add(fclass);
-                todolist.classList.remove("not"+fclass);
-
-            } else {  // "not" prefix classes
-                todolist.classList.add("not"+fclass);
-                todolist.classList.remove(fclass);
-            }
+            todolist.setAttribute(button.name+"filter", button.value);
         })
-    })
-
-    document.getElementById("removefilter").addEventListener("click", () => {
-        const todolist = document.getElementById("todolist");
-        // has filters
-        if (todolist.classList.length != 0) {
-            todolist.className = "";
-            // uncheck all filter buttons
-            filters.forEach(button => {
-                button.checked = false;
-            })
-        }
     })
 }
 

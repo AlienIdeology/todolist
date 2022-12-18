@@ -5,13 +5,6 @@ block head
 
 block center
     h1 Get 'em done!
-    #todofilter
-        span Filters:
-        input#donefilter.filter(type="checkbox" value="done") 
-        label(for="donefilter") Done
-        input#overduefilter.filter(type="checkbox" value="overdue")
-        label(for="overduefilter") Overdue 
-        input#removefilter(type="button" value="Remove All")
     #todolist 
         each item in rows
             .todoitem(id=item.id)
@@ -27,5 +20,40 @@ block center
                     span.tododelete
         #addTodoitem
             div#plus
+
+block right 
+    #todofilter
+        span Filters:
+        div
+            span.text Done
+            .toggles3 
+                input#done1.radio1.filter(type="radio" name="done" value="done")
+                input#done2.radio2.filter(type="radio" name="done" value="" checked=true)
+                input#done3.radio3.filter(type="radio" name="done" value="notdone")
+
+                span.sliderContainer 
+                    label.label1(for="done1")
+                        div.check
+                    label.label2(for="done2")
+                        span.text –
+                    label.label3(for="done3")
+                        span.cross
+                    span.slider
+        div
+            span Overdue
+            .toggles3 
+                input#overdue1.radio1.filter(type="radio" name="overdue" value="overdue")
+                input#overdue2.radio2.filter(type="radio" name="overdue" value="" checked=true)
+                input#overdue3.radio3.filter(type="radio" name="overdue" value="notoverdue")
+
+                span.sliderContainer 
+                    label.label1(for="overdue1")
+                        div.check
+                    label.label2(for="overdue2")
+                        span.text –
+                    label.label3(for="overdue3")
+                        span.cross
+                    span.slider
+
     //- This fixes the bug where css transition fires on page load in Chrome:
     script 
