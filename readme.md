@@ -1,4 +1,4 @@
-### Todolist
+# Todolist
 
 ## Features
  - Three themes (blue, black, yellow), can be toggled with button
