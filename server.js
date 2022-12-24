@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const db = require("./db");
+const db = require("./mockdb");
 // load local json data
 const private = require("./private.json");
 const themes = require("./themes.json");
@@ -26,6 +26,7 @@ server.use("/resources", express.static("resources"));
 server.get("/", (req, res) => {
     if (!req.session.theme) req.session.theme = themes[0];  // theme index
     db.getTodoList(req.query).then(rows => {
+        // console.log(rows);
         res.status(200).type(mime.html).render("todolist", {rows: rows, theme: req.session.theme});
     }, err => {
         console.log("Front page error");
@@ -81,7 +82,7 @@ server.post("/api/items", (req, res) => {
 server.put("/api/items/:id", (req, res) => {
     let item = req.body;
     let id = req.params.id;
-    if (!item || !id) {
+    if (!item || !id || Number.isNaN(id)) {
         res.status(400).type(mime.json).json({code:"Item (json) or item id needed"});
         return;
     }
@@ -99,7 +100,11 @@ server.put("/api/items/:id", (req, res) => {
 // delete item
 server.delete("/api/items/:id", (req, res) => {
     const id = req.params.id;
-    db.deleteTodoItem(id).then(result => {
+    if (!id || Number.isNaN(id)) {
+        res.status(400).type(mime.json).json({code:"Item (json) or item id needed"});
+        return;
+    }
+    db.deleteTodoItem(parseInt(id)).then(result => {
         console.log("Item successfully deleted: ");
         console.log(result);
         res.type(mime.json).json(result);

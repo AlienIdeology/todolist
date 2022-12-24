@@ -1,4 +1,5 @@
 # Todolist
+If you cloned this repository, make sure to rename the file `examplePrivate.json` to `private.json` and replace the string values, and have `server.js` require `./db.js` instead of `./mockdb.js`.
 
 ## Features
  - Three themes (blue, black, yellow), can be toggled with button
@@ -21,7 +22,6 @@
  - Error messages shows up on the top of the page, then disappears automatically after 5 seconds
  - Filter todo items by done/not done, overdue/not overdue
  - Changes to items (creating, updating, or removing) are submitted to the server as changes happen
-   - If you cloned this repo, make sure to rename the file `examplePrivate.json` to `private.json` and replace the string values.
 
 ## Future directions:
  - User system
