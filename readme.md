@@ -23,6 +23,9 @@ If you cloned this repository, make sure to rename the file `examplePrivate.json
  - Filter todo items by done/not done, overdue/not overdue
  - Changes to items (creating, updating, or removing) are submitted to the server as changes happen
 
+## Demo
+https://user-images.githubusercontent.com/16383622/209446982-9b001f63-9c5e-40c3-b565-9bee6b0272b6.mov
+
 ## Future directions:
  - User system
  - Categories
